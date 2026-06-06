@@ -1,0 +1,79 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run checks
+      run: npm run analyze
+      env:
+        VITE_IMDB_API_KEY: ${{ secrets.VITE_IMDB_API_KEY }}
+        VITE_DEEZER_API_KEY: ${{ secrets.VITE_DEEZER_API_KEY }}
+    
+    - name: Build project
+      run: npm run build
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./
+        cname: devmovies.example.com  # Alterar se necessário
+      if: success()
+    
+    - name: Create deployment
+      uses: actions/github-script@v6
+      if: success()
+      with:
+        script: |
+          github.rest.repos.createDeployment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: context.sha,
+            environment: 'production',
+            auto_merge: false,
+            required_contexts: []
+          });
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Start local server
+      run: python -m http.server 8000 > /dev/null 2>&1 &
+    
+    - name: Wait for server
+      run: sleep 3
+    
+    - name: Run Lighthouse
+      uses: treosh/lighthouse-ci-action@v9
+      with:
+        runs: 3
+        uploadArtifacts: true
+        configPath: './.github/lighthouse.json'
+      continue-on-error: true
