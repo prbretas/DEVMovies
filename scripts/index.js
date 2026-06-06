@@ -7,8 +7,8 @@ const btnShowMore = document.querySelector('.show-more');
 fetch(url, {
     method: 'GET',
     headers: {
-        'X-RapidAPI-Key': 'f00182066dmshb169e57e1712abdp1fe53ajsn0a4e78cbd9d4',
-        'X-RapidAPI-Host': 'imdb-top-100-movies.p.rapidapi.com',
+        'X-RapidAPI-Key': process.env.VITE_IMDB_API_KEY || '',
+        'X-RapidAPI-Host': process.env.VITE_IMDB_HOST || 'imdb-top-100-movies.p.rapidapi.com',
     },
 })
     .then((response) => {
