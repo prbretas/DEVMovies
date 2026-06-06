@@ -31,7 +31,7 @@ fetch(url, {
     });
 
 function renderFilms(films) {
-    for (film of films) {
+    for (const film of films) {
         const html = `<div class="film-card">
                             <img src=${film.image} alt="Обложка" class="film-card__img">
                             <h3 class="film-card__title">${film.title}</h3>
@@ -43,6 +43,16 @@ function renderFilms(films) {
         filmsWrapper.insertAdjacentHTML('beforeend', html);
     }
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        renderFilms
+    };
+}
+
+
+
+
 
 
 

@@ -18,3 +18,11 @@ function alterarLinkGame(idLinkGame) {
 console.log(idLinkGame)
 iframeGame.setAttribute("src", srcLinks[idLinkGame]);
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        altGameLink,
+        alterarLinkGame,
+        srcLinks
+    };
+}

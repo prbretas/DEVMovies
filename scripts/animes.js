@@ -27,4 +27,11 @@ function alterarLinkFilme(indexFilme) {
    console.log(indexFilme)
    iframeFilme.setAttribute("src", sourceVideos[indexFilme]);
    }
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        alterarLinkFilme,
+        sourceVideos
+    };
+}
    

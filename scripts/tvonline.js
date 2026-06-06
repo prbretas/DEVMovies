@@ -24,3 +24,11 @@ function selecionarCanal() {
       iframePlutoTv.setAttribute("src", "");
     }
   }
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        abrirPlutoTv,
+        selecionarCanal,
+        sourceVideos
+    };
+}
